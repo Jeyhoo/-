@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 基本实现
+        Function.prototype.myCall = function(ctx,...args){
+            ctx.fn = this;
+            ctx.fn(...args);
+            delete ctx.fn;
+        }
+
+        function methods(a,b){
+            console.log(this,a,b)
+        }
+
+        methods.myCall({},1,2)
+
+        // 改进函数-1
+        // 1.使用fn作为临时函数，可能会导致重名
+        Function.prototype.myCall2 = function(ctx,...args){
+            const key = Symbol();
+            ctx[key] = this;
+            ctx[key](...args);
+            delete ctx[key];
+        }
+
+        // 改进函数-2
+        // 1.打印输出的this，带着fn属性，这是不应该的
+        // 2.万一methods有返回值，那么myCall也应该返回
+        // 3.处理万一传进来的ctx是个null或者undefined，再或者是数组和字符串等
+        Function.prototype.myCall2 = function(ctx,...args){
+            ctx = (ctx === null || ctx === undefined) ? globalThis : Object(ctx);
+            const key = Symbol();
+            Object.defineProperty(ctx,key,{
+                enumerable:false,
+                value:this,
+            })
+            const result = ctx[key](...args);
+            delete ctx[key];
+            return result
+        }
+    </script>
+</body>
+</html>

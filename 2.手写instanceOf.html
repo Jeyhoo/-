@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 最终写法
+        function myInstanceOf(left,right){
+            let proto = Object.getPrototypeOf(left);
+            let prototype = right.prototype;
+            while(proto){
+                if(proto === prototype){
+                    return true
+                }
+                proto = Object.getPrototypeOf(proto);
+            }
+            return false
+        }
+
+        console.log(myInstanceOf(Array,Object))
+        console.log(myInstanceOf(2,Number))
+        console.log(myInstanceOf([],Number))
+        console.log(myInstanceOf([],Object))
+        console.log(myInstanceOf(2,Object))
+
+        console.log(2 instanceof Object)
+
+        console.warn("-------自己尝试------")
+        // function myInstanceOf2(left,right){
+        //     let proto = Object.getPrototypeOf(left);
+        //     let prototype = right.prototype;
+        //     while(proto){
+        //         if(proto === prototype){
+        //             return true
+        //         }
+        //         proto = Object.getPrototypeOf(proto)
+        //     }
+        //     return false
+        // }
+        // console.warn(myInstanceOf2([],Number))
+    </script>
+</body>
+</html>
